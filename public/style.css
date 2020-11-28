@@ -133,9 +133,21 @@ body{
 
 .score-board{
     color: white;
-    width: 10%;
+    width: 400px;
     margin-left: 20px;
+    background-color: black;
 }
 .instruction{
-    display: inline;
+    display:flex;
+    flex-direction: row;
+}
+
+.instruction p {
+    margin-left: 5px;
+    font-weight: bold;
+}
+
+#score{
+    font-weight: bold;
+    font-size: 36px;
 }

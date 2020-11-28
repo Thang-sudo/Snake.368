@@ -7,9 +7,9 @@ let growRate = 1;
 // Update snake position continously
 // With constant SPEED the main function not going to update the animation until it meets a threshold
 let snake = [{row: 11, col: 11}];
-let apple = createApple();
-let speedUp = createSpeedUpPotion();
-let growingPotion = createGrowingPotion();
+let apple = {row: 2, col: 11};
+let speedUp = {row: 4, col: 5};
+let growingPotion = {row: 6, col: 8};
 let direction = {row: -1, col: 0};
 let speed = 5;
 let score = 0;
@@ -20,13 +20,28 @@ const mediumButton = document.getElementById('medium-button');
 const hardButton = document.getElementById('hard-button');
 let stopped = true;
 
+var themeMusic;
+var eatingSoundEffect;
+var gameOverSoundEffect;
+
+document.addEventListener('keyup', e =>{
+    if(e.code === 'Space'){
+        stopped = !stopped;
+        if(!stopped){
+            startGame();
+        }
+    }
+    
+})
+
 easyButton.addEventListener('click', () => {
     speed = 3; 
     stopped = false;
     easyButton.disabled = true;
     mediumButton.disabled = true;
-    hardButton.disabled = true; 
-    startGame()
+    hardButton.disabled = true;
+    setTimeout(() => startGame(), 1000); 
+    
 });
 
 mediumButton.addEventListener('click', () => {
@@ -35,7 +50,7 @@ mediumButton.addEventListener('click', () => {
     easyButton.disabled = true;
     mediumButton.disabled = true;
     hardButton.disabled = true;  
-    startGame()
+    setTimeout(() => startGame(), 1000);
 });
 
 hardButton.addEventListener('click', () => {
@@ -44,11 +59,44 @@ hardButton.addEventListener('click', () => {
     easyButton.disabled = true;
     mediumButton.disabled = true;
     hardButton.disabled = true; 
-    startGame();
+    setTimeout(() => startGame(), 1000);
 });
 
+// Control sound effects 
+function sound(src, autoReplay) {
+    console.log(autoReplay)
+    this.sound = document.createElement("audio");
+    this.sound.src = src;
+    this.sound.setAttribute("preload", "auto");
+    if(autoReplay === true){
+        this.sound.setAttribute("controls", "none");
+        this.sound.setAttribute("loop", true);
+    }
+    else{
+        this.sound.setAttribute("controls", "none");
+    }
+    
+    this.sound.style.display = "none";
+    document.body.appendChild(this.sound);
+    this.play = function(){
+        this.sound.play();
+    }
+    this.stop = function(){
+        this.sound.pause();
+    }
+
+    this.setVolume = function(volume){
+        this.sound.volume = volume;
+    }
+    
+  }
 
 function startGame(){
+    themeMusic = new sound("./audio/theme.mp3", true);
+    eatingSoundEffect = new sound("./audio/score.mp3", false);
+    gameOverSoundEffect = new sound("./audio/over.mp3", false);
+    themeMusic.setVolume(0.4);
+    themeMusic.play();
     function main(current){
         if(!stopped){
             window.requestAnimationFrame(main);
@@ -71,6 +119,8 @@ function startGame(){
 function updateGame(){
     if(checkGameOver()){
         stopped = true;
+        themeMusic.stop();
+        gameOverSoundEffect.play();
         if (confirm('Game Over. Press ok to restart.')) {
             location.reload();
             snake = [{row: 11, col: 11}];
@@ -88,21 +138,20 @@ function updateGame(){
       snake[0].col += direction.col;
 
     if(isOnSnake(apple)){
+        eatingSoundEffect.play();
         score += speed;
         increaseSnakeLength();
         apple = createApple();
     }
 
     if(isOnSnake(speedUp)){
+        eatingSoundEffect.play();
         speedUpSnake();
         speedUp = createSpeedUpPotion();
     }
 
-    // if(secondsFromLasTime >= 2){
-    //     growingPotion = createGrowingPotion();
-    // }
-
     if(isOnSnake(growingPotion)){
+        eatingSoundEffect.play();
         growSnake();
         growingPotion = createGrowingPotion();
     }
@@ -176,7 +225,7 @@ function createApple(){
     let appleRow = 0;
     let appleCol = 0;
     let newApple = null;
-    while(newApple === null || isOnSnake(newApple)){
+    while(newApple === null || isOnSnake(newApple) || (appleRow === speedUp.row && appleCol === speedUp.col) || (appleRow === growingPotion.row && appleCol === growingPotion.col)){
         appleRow = Math.floor(Math.random() * 21 + 1);
         appleCol = Math.floor(Math.random() * 21 + 1);
         newApple = {row: appleRow, col: appleCol}
@@ -188,7 +237,7 @@ function createSpeedUpPotion(){
     let SpeedUpPotionRow = 0;
     let SpeedUpPotionCol = 0;
     let newSpeedUpPotion = null;
-    while(newSpeedUpPotion === null || isOnSnake(newSpeedUpPotion)){
+    while(newSpeedUpPotion === null || isOnSnake(newSpeedUpPotion) || (SpeedUpPotionRow === apple.row && SpeedUpPotionCol === apple.col) || (SpeedUpPotionRow === growingPotion.row && SpeedUpPotionCol === growingPotion.col)){
         SpeedUpPotionRow = Math.floor(Math.random() * 21 + 1);
         SpeedUpPotionCol = Math.floor(Math.random() * 21 + 1);
         newSpeedUpPotion = {row: SpeedUpPotionRow, col: SpeedUpPotionCol}
@@ -200,7 +249,7 @@ function createGrowingPotion(){
     let GrowingPotionRow = 0;
     let GrowingPotionCol = 0;
     let newGrowingPotion = null;
-    while(newGrowingPotion === null || isOnSnake(newGrowingPotion)){
+    while(newGrowingPotion === null || isOnSnake(newGrowingPotion) || (GrowingPotionRow === speedUp.row && GrowingPotionCol === speedUp.col) || (GrowingPotionRow === apple.row && GrowingPotionCol === apple.col)){
         GrowingPotionRow = Math.floor(Math.random() * 21 + 1);
         GrowingPotionCol = Math.floor(Math.random() * 21 + 1);
         newGrowingPotion = {row: GrowingPotionRow, col: GrowingPotionCol}
