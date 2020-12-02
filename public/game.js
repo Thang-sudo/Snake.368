@@ -107,9 +107,7 @@ function startGame(){
             updateGame();
             renderGame(gameBoard);
         }
-        
     }
-    
     window.requestAnimationFrame(main)
 }
 
@@ -293,7 +291,7 @@ function headIsOnBody(){
 }
 
 function isOffBorder(){
-    return (snake[0].row > 21 || snake[0].row < 1 || snake[0].col > 21 || snake[0].col < 1);
+    return (snake[0].row > 25 || snake[0].row < 1 || snake[0].col > 25 || snake[0].col < 1);
 }
 
 function checkGameOver(){
