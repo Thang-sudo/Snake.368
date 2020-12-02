@@ -6,8 +6,8 @@ let growRate = 1;
 // Use window.requestAnimationFrame to handle animations
 // Update snake position continously
 // With constant SPEED the main function not going to update the animation until it meets a threshold
-let snake = [{row: 11, col: 11}];
-let apple = {row: 2, col: 11};
+let snake = [{row: 11, col: 13}];
+let apple = {row: 2, col: 13};
 let speedUp = {row: 4, col: 5};
 let growingPotion = {row: 6, col: 8};
 let direction = {row: -1, col: 0};
@@ -31,7 +31,6 @@ document.addEventListener('keyup', e =>{
             startGame();
         }
     }
-    
 })
 
 easyButton.addEventListener('click', () => {
@@ -40,7 +39,7 @@ easyButton.addEventListener('click', () => {
     easyButton.disabled = true;
     mediumButton.disabled = true;
     hardButton.disabled = true;
-    setTimeout(() => startGame(), 1000); 
+    setTimeout(() => startGame(), 2000); 
     
 });
 
@@ -50,7 +49,7 @@ mediumButton.addEventListener('click', () => {
     easyButton.disabled = true;
     mediumButton.disabled = true;
     hardButton.disabled = true;  
-    setTimeout(() => startGame(), 1000);
+    setTimeout(() => startGame(), 2000);
 });
 
 hardButton.addEventListener('click', () => {
@@ -59,7 +58,7 @@ hardButton.addEventListener('click', () => {
     easyButton.disabled = true;
     mediumButton.disabled = true;
     hardButton.disabled = true; 
-    setTimeout(() => startGame(), 1000);
+    setTimeout(() => startGame(), 2000);
 });
 
 // Control sound effects 
